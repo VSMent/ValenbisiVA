@@ -1,6 +1,6 @@
 # ValenbisiVA
 
-### APP features
+### APP features:
 * It shows all bike stations of "Valenbici" network as list with its number, name, available bikes.
 * Shows stations on maps
 
