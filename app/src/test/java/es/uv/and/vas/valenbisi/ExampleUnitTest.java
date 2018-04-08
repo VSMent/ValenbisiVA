@@ -1,4 +1,4 @@
-package es.uv.and.vas.valenbici;
+package es.uv.and.vas.valenbisi;
 
 import org.junit.Test;
 
