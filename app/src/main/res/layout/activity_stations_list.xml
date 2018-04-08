@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ListaParadas">
+    tools:context=".StationsList"
+    tools:layout_editor_absoluteY="81dp">
 
     <ListView
+        android:id="@+id/ListView_Stations"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"

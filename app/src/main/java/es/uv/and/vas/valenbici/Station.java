@@ -2,7 +2,7 @@ package es.uv.and.vas.valenbici;
 
 import java.util.Date;
 
-class Parada {
+class Station {
     public String name;
     public int number;
     public String address;
