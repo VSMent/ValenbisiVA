@@ -23,7 +23,7 @@ import java.util.ArrayList;
 public class AdapterStations extends BaseAdapter {
 
     // global variables
-    ArrayList<Station> stations;
+    public static ArrayList<Station> stations;
     Context context;
 
     AdapterStations(Context c){
@@ -91,7 +91,7 @@ public class AdapterStations extends BaseAdapter {
                                     obj.getJSONObject("geometry").getString("type"),
                                     new float[]{
                                             (float) obj.getJSONObject("geometry").getJSONArray("coordinates").getDouble(0),
-                                            (float) obj.getJSONObject("geometry").getJSONArray("coordinates").getDouble(0)
+                                            (float) obj.getJSONObject("geometry").getJSONArray("coordinates").getDouble(1)
                                     }
                             )
                     ));
@@ -135,7 +135,7 @@ public class AdapterStations extends BaseAdapter {
 
         if(row == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            row = inflater.inflate(R.layout.station_row, parent, false);
+            row = inflater.inflate(R.layout.station_list_row, parent, false);
             holder = new ViewHolder(row);
             row.setTag(holder);
         }else {
