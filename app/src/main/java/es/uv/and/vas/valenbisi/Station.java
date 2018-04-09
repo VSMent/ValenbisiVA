@@ -1,17 +1,11 @@
 package es.uv.and.vas.valenbisi;
 
-import java.util.Date;
-
 class Station {
-    public String name;
-    public int number;
-    public String address;
-    public char open;
-    public int available;
-    public int free;
-    public int total;
-    public char ticket;
-    public Date updated_at;
-    public Geometry geometry;
+    public Properties properties = null;
+    public Geometry geometry = null;
 
+    Station(Properties properties, Geometry geometry){
+        this.properties = properties;
+        this.geometry = geometry;
+    }
 }
