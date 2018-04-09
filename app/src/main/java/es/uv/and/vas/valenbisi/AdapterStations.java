@@ -14,6 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -48,10 +49,10 @@ public class AdapterStations extends BaseAdapter {
 
     public void Init(){
         String jsonString = "";
-        JSONObject jsonObject;
 
         stations = new ArrayList<Station>();
         InputStream is = context.getResources().openRawResource(R.raw.valenbisi);
+//        InputStream is = context.getResources().openRawResource(R.raw.small);
         Writer writer = new StringWriter();
         char[] buffer = new char[1024];
         try {
@@ -59,10 +60,7 @@ public class AdapterStations extends BaseAdapter {
             int n;
             while ((n = reader.read(buffer)) != -1) {
                 writer.write(buffer, 0, n);
-                jsonString += writer.toString();
             }
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -72,10 +70,17 @@ public class AdapterStations extends BaseAdapter {
                 e.printStackTrace();
             }
         }
+        jsonString = writer.toString();
 
 
-
-
+        JSONArray jsonArray = null;
+        JSONObject jsonObject;
+        try{
+            jsonObject = new JSONObject(jsonString);
+            jsonArray = new JSONArray(jsonObject.get("features").toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         rows = new ArrayList<SingleRow>();
         Resources res = context.getResources();
