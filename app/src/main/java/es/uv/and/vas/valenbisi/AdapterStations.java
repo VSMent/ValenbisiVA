@@ -22,6 +22,7 @@ import java.util.ArrayList;
 
 public class AdapterStations extends BaseAdapter {
 
+    // global variables
     ArrayList<Station> stations;
     Context context;
 
@@ -31,14 +32,18 @@ public class AdapterStations extends BaseAdapter {
     }
 
     public void Init(){
+        // global variables for Init scope
         String jsonString;
         JSONArray jsonArray = null;
         JSONObject jsonObject;
 
-        stations = new ArrayList<Station>();
+        stations = new ArrayList<>();
+
+        // read file to writer -> jsonString
         InputStream is = context.getResources().openRawResource(R.raw.valenbisi);
         Writer writer = new StringWriter();
         char[] buffer = new char[1024];
+
         try {
             Reader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
             int n;
@@ -56,6 +61,7 @@ public class AdapterStations extends BaseAdapter {
         }
         jsonString = writer.toString();
 
+        // json array of features from jsonString
         try{
             jsonObject = new JSONObject(jsonString);
             jsonArray = new JSONArray(jsonObject.get("features").toString());
@@ -63,6 +69,7 @@ public class AdapterStations extends BaseAdapter {
             e.printStackTrace();
         }
 
+        // clone data from jsonArray to stations array
         if(jsonArray != null){
             for (int i = 0; i < jsonArray.length(); i++) {
                 try {
