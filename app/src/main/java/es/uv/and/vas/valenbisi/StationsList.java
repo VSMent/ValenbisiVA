@@ -1,4 +1,4 @@
-package es.uv.and.vas.valenbici;
+package es.uv.and.vas.valenbisi;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

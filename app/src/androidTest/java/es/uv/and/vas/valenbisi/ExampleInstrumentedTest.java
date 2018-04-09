@@ -1,4 +1,4 @@
-package es.uv.and.vas.valenbici;
+package es.uv.and.vas.valenbisi;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("es.uv.and.vas.valenbici", appContext.getPackageName());
+        assertEquals("es.uv.and.vas.valenbisi", appContext.getPackageName());
     }
 }
