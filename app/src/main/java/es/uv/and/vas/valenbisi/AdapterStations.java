@@ -9,6 +9,18 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.util.ArrayList;
 
 class SingleRow{
@@ -25,6 +37,8 @@ class SingleRow{
 public class AdapterStations extends BaseAdapter {
 
     ArrayList<SingleRow> rows;
+
+    ArrayList<Station> stations;
     Context context;
 
     AdapterStations(Context c){
@@ -33,6 +47,36 @@ public class AdapterStations extends BaseAdapter {
     }
 
     public void Init(){
+        String jsonString = "";
+        JSONObject jsonObject;
+
+        stations = new ArrayList<Station>();
+        InputStream is = context.getResources().openRawResource(R.raw.valenbisi);
+        Writer writer = new StringWriter();
+        char[] buffer = new char[1024];
+        try {
+            Reader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            int n;
+            while ((n = reader.read(buffer)) != -1) {
+                writer.write(buffer, 0, n);
+                jsonString += writer.toString();
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+
+
+
         rows = new ArrayList<SingleRow>();
         Resources res = context.getResources();
         String[] saddresses = res.getStringArray(R.array.saddress);
@@ -83,7 +127,6 @@ public class AdapterStations extends BaseAdapter {
         }else {
             holder = (ViewHolder) row.getTag();
         }
-
 
         holder.vhaddress.setText(rows.get(position).saddress);
         holder.vhid.setText("#" + rows.get(position).sid);
