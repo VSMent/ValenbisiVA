@@ -19,6 +19,7 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class AdapterStations extends BaseAdapter {
 
@@ -99,6 +100,7 @@ public class AdapterStations extends BaseAdapter {
                     e.printStackTrace();
                 }
             }
+            Collections.sort(stations,new StationsComparator());
         }
     }
 
