@@ -1,8 +1,6 @@
 package es.uv.and.vas.valenbisi;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,30 +12,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.ArrayList;
 
-class SingleRow{
-    String saddress;
-    String sid;
-    String samount;
-    SingleRow(String address, String id, String amount){
-        this.saddress = address;
-        this.sid = id;
-        this.samount = amount;
-    }
-}
-
 public class AdapterStations extends BaseAdapter {
-
-    ArrayList<SingleRow> rows;
 
     ArrayList<Station> stations;
     Context context;
@@ -48,11 +31,12 @@ public class AdapterStations extends BaseAdapter {
     }
 
     public void Init(){
-        String jsonString = "";
+        String jsonString;
+        JSONArray jsonArray = null;
+        JSONObject jsonObject;
 
         stations = new ArrayList<Station>();
         InputStream is = context.getResources().openRawResource(R.raw.valenbisi);
-//        InputStream is = context.getResources().openRawResource(R.raw.small);
         Writer writer = new StringWriter();
         char[] buffer = new char[1024];
         try {
@@ -72,9 +56,6 @@ public class AdapterStations extends BaseAdapter {
         }
         jsonString = writer.toString();
 
-
-        JSONArray jsonArray = null;
-        JSONObject jsonObject;
         try{
             jsonObject = new JSONObject(jsonString);
             jsonArray = new JSONArray(jsonObject.get("features").toString());
@@ -82,25 +63,46 @@ public class AdapterStations extends BaseAdapter {
             e.printStackTrace();
         }
 
-        rows = new ArrayList<SingleRow>();
-        Resources res = context.getResources();
-        String[] saddresses = res.getStringArray(R.array.saddress);
-        String[] sids = res.getStringArray(R.array.sid);
-        String[] samounts = res.getStringArray(R.array.samount);
+        if(jsonArray != null){
+            for (int i = 0; i < jsonArray.length(); i++) {
+                try {
+                    JSONObject obj = jsonArray.getJSONObject(i);
 
-        for (int i = 0; i < 15; i++) {
-            rows.add(new SingleRow(saddresses[i],sids[i],samounts[i]));
+                    stations.add(new Station(
+                            new Properties(
+                                    obj.getJSONObject("properties").getString("name"),
+                                    obj.getJSONObject("properties").getInt("number"),
+                                    obj.getJSONObject("properties").getString("address"),
+                                    obj.getJSONObject("properties").getString("open"),
+                                    obj.getJSONObject("properties").getInt("available"),
+                                    obj.getJSONObject("properties").getInt("free"),
+                                    obj.getJSONObject("properties").getInt("total"),
+                                    obj.getJSONObject("properties").getString("ticket"),
+                                    obj.getJSONObject("properties").getString("updated_at")
+                            ),
+                            new Geometry(
+                                    obj.getJSONObject("geometry").getString("type"),
+                                    new float[]{
+                                            (float) obj.getJSONObject("geometry").getJSONArray("coordinates").getDouble(0),
+                                            (float) obj.getJSONObject("geometry").getJSONArray("coordinates").getDouble(0)
+                                    }
+                            )
+                    ));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
     @Override
     public int getCount() {
-        return rows.size();
+        return stations.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return rows.get(position);
+        return stations.get(position);
     }
 
     @Override
@@ -133,53 +135,11 @@ public class AdapterStations extends BaseAdapter {
             holder = (ViewHolder) row.getTag();
         }
 
-        holder.vhaddress.setText(rows.get(position).saddress);
-        holder.vhid.setText("#" + rows.get(position).sid);
-        holder.vhamount.setText(rows.get(position).samount + " bike(s) free");
+        holder.vhaddress.setText(stations.get(position).properties.address);
+        holder.vhid.setText("#" + stations.get(position).properties.number);
+        holder.vhamount.setText(stations.get(position).properties.free + " bike(s) free");
 
         return row;
     }
 }
-
-
-//public class AdapterStations extends BaseAdapter {
-//    private ArrayList<Station> stations;
-//    Context context;
-//
-//    static class ViewHolder {
-//        TextView number;
-//        TextView address;
-//        TextView partes;
-//    }
-//
-//    public AdapterStations(Context c) {
-//        context = c;
-////        Init();
-//    }
-//
-////    public void Init() {
-////        paradas = new ArrayList<Station>();
-////        InputStream is = context.getResources().openRawResource(R.raw.paradasvalenbici);
-////        Writer writer = new StringWriter();
-////        char[] buffer = new char[1024];
-////        try {
-////            Reader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-////            int n;
-////            while ((n = reader.read(buffer)) != -1) {
-////                writer.write(buffer, 0, n);
-////            }
-////        } catch (UnsupportedEncodingException e) {
-////            e.printStackTrace();
-////        } catch (IOException e) {
-////            e.printStackTrace();
-////        } finally {
-////            try {
-////                is.close();
-////            } catch (IOException e) {
-////                e.printStackTrace();
-////            }
-////        }
-////        //The String writer.toString() must be parsed in the bike stations
-////        // ArrayList by using JSONArray and JSONObject
-////    }
 
