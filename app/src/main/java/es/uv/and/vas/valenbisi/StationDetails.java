@@ -22,11 +22,9 @@ public class StationDetails extends AppCompatActivity {
         intent = getIntent();
         int pos = intent.getIntExtra("pos",-1);
         if(pos == -1){
-            Log.e("VSM","Error");
+            Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
         }else{
             st = AdapterStations.stations.get(pos);
-
-            Log.d("VSM",st.properties.address);
 
             TextView tv_n = findViewById(R.id.textView_NumberValue);
             TextView tv_ad = findViewById(R.id.textView_AddressValue);
@@ -58,10 +56,9 @@ public class StationDetails extends AppCompatActivity {
 //        if (mapIntent.resolveActivity(getPackageManager()) != null) {
 //            startActivity(mapIntent);
 //        }
-//        Log.d("VSM","Map: " + latitud + ", " + longitud);
-        Toast.makeText(this, "Wrong coordinates:\n" + latitud + ", " + longitud, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Wrong coordinates:\n" + latitud + ", " + longitud, Toast.LENGTH_SHORT).show();
     }
     public void editDetails(View view){
-        Log.d("VSM","edit");
+        Toast.makeText(this, "Edit button click", Toast.LENGTH_SHORT).show();
     }
 }
