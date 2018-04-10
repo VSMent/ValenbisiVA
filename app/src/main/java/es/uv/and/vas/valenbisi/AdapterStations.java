@@ -19,10 +19,38 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
+import uk.me.jstott.jcoord.UTMRef;
 
 public class AdapterStations extends BaseAdapter {
 
-    ArrayList<Station> stations;
+    // global variables
+    class ViewHolder{
+        TextView vhaddress;
+        TextView vhid;
+        TextView vhreports;
+        ViewHolder(View v){
+            vhaddress = v.findViewById(R.id.textView_Row_Address);
+            vhid = v.findViewById(R.id.textView_Row_Id);
+            vhreports = v.findViewById(R.id.textView_Row_Reports);
+        }
+    }
+    class StationsComparator implements Comparator<Station> {
+        @Override
+        public int compare(Station s1, Station s2) {
+            int n1 = s1.properties.number;
+            int n2 = s2.properties.number;
+            if(n1 > n2){
+                return 1;
+            }else if(n2 > n1){
+                return -1;
+            }
+            return 0;
+        }
+    }
+    public static ArrayList<Station> stations;
     Context context;
 
     AdapterStations(Context c){
@@ -31,14 +59,18 @@ public class AdapterStations extends BaseAdapter {
     }
 
     public void Init(){
+        // global variables for Init scope
         String jsonString;
         JSONArray jsonArray = null;
         JSONObject jsonObject;
 
-        stations = new ArrayList<Station>();
+        stations = new ArrayList<>();
+
+        // read file to writer -> jsonString
         InputStream is = context.getResources().openRawResource(R.raw.valenbisi);
         Writer writer = new StringWriter();
         char[] buffer = new char[1024];
+
         try {
             Reader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
             int n;
@@ -56,6 +88,7 @@ public class AdapterStations extends BaseAdapter {
         }
         jsonString = writer.toString();
 
+        // json array of features from jsonString
         try{
             jsonObject = new JSONObject(jsonString);
             jsonArray = new JSONArray(jsonObject.get("features").toString());
@@ -63,10 +96,21 @@ public class AdapterStations extends BaseAdapter {
             e.printStackTrace();
         }
 
+        // clone data from jsonArray to stations array
         if(jsonArray != null){
             for (int i = 0; i < jsonArray.length(); i++) {
                 try {
                     JSONObject obj = jsonArray.getJSONObject(i);
+
+                    // coordinates conversion
+                    double[] coordinates = {
+                            obj.getJSONObject("geometry").getJSONArray("coordinates").getDouble(0),
+                            obj.getJSONObject("geometry").getJSONArray("coordinates").getDouble(1)
+                    };
+
+                    UTMRef utm = new UTMRef(coordinates[0], coordinates[1], 'N', 30);
+                    coordinates[0] = utm.toLatLng().getLat();
+                    coordinates[1] = utm.toLatLng().getLng();
 
                     stations.add(new Station(
                             new Properties(
@@ -82,16 +126,14 @@ public class AdapterStations extends BaseAdapter {
                             ),
                             new Geometry(
                                     obj.getJSONObject("geometry").getString("type"),
-                                    new float[]{
-                                            (float) obj.getJSONObject("geometry").getJSONArray("coordinates").getDouble(0),
-                                            (float) obj.getJSONObject("geometry").getJSONArray("coordinates").getDouble(0)
-                                    }
+                                    coordinates
                             )
                     ));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
+            Collections.sort(stations,new StationsComparator());
         }
     }
 
@@ -110,17 +152,6 @@ public class AdapterStations extends BaseAdapter {
         return position;
     }
 
-    class ViewHolder{
-        TextView vhaddress;
-        TextView vhid;
-        TextView vhamount;
-        ViewHolder(View v){
-            vhaddress = v.findViewById(R.id.Station_address);
-            vhid = v.findViewById(R.id.Station_id);
-            vhamount = v.findViewById(R.id.Station_bicycles);
-        }
-    }
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
@@ -128,7 +159,7 @@ public class AdapterStations extends BaseAdapter {
 
         if(row == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            row = inflater.inflate(R.layout.station_row, parent, false);
+            row = inflater.inflate(R.layout.station_list_row, parent, false);
             holder = new ViewHolder(row);
             row.setTag(holder);
         }else {
@@ -137,7 +168,7 @@ public class AdapterStations extends BaseAdapter {
 
         holder.vhaddress.setText(stations.get(position).properties.address);
         holder.vhid.setText("#" + stations.get(position).properties.number);
-        holder.vhamount.setText(stations.get(position).properties.free + " bike(s) free");
+        holder.vhreports.setText("0 reports");
 
         return row;
     }

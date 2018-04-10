@@ -3,10 +3,10 @@
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/Station_address"
+        android:id="@+id/textView_Row_Address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/Station_id"
+        android:layout_below="@+id/textView_Row_Id"
         android:layout_marginEnd="5dp"
         android:layout_marginStart="5dp"
         android:layout_marginTop="-5dp"
@@ -15,7 +15,7 @@
         android:textSize="24sp" />
 
     <TextView
-        android:id="@+id/Station_id"
+        android:id="@+id/textView_Row_Id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -25,13 +25,13 @@
         android:text="Station # 234" />
 
     <TextView
-        android:id="@+id/Station_bicycles"
+        android:id="@+id/textView_Row_Reports"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:layout_marginEnd="5dp"
         android:layout_marginTop="2dp"
-        android:text="Available bicycles: 400" />
+        android:text="0 reports" />
 
 </RelativeLayout>
