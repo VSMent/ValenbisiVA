@@ -44,19 +44,18 @@ public class StationDetails extends AppCompatActivity {
     }
 
     public void showOnMap(View view){
-        float latitud = st.geometry.coordinates[0];
-        float longitud = st.geometry.coordinates[1];
-//        String stationName = st.properties.name;
-//
-//        Uri gmmIntentUri;
-//        gmmIntentUri = Uri.parse("geo:0,0?q="+latitud+","+longitud+"("+stationName+")");
-//        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-//        mapIntent.setPackage("com.google.android.apps.maps");
-//        // If is installed in the application, the Google Maps activity is launched
-//        if (mapIntent.resolveActivity(getPackageManager()) != null) {
-//            startActivity(mapIntent);
-//        }
-        Toast.makeText(this, "Wrong coordinates:\n" + latitud + ", " + longitud, Toast.LENGTH_SHORT).show();
+        double latitud = st.geometry.coordinates[0];
+        double longitud = st.geometry.coordinates[1];
+
+        String stationName = st.properties.name;
+
+        Uri gmmIntentUri = Uri.parse("geo:0,0?q="+latitud+","+longitud+"("+stationName+")");
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        // If is installed in the application, the Google Maps activity is launched
+        if (mapIntent.resolveActivity(getPackageManager()) != null) {
+            startActivity(mapIntent);
+        }
     }
     public void editDetails(View view){
         Toast.makeText(this, "Edit button click", Toast.LENGTH_SHORT).show();

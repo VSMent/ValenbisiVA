@@ -21,6 +21,8 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import uk.me.jstott.jcoord.UTMRef;
+
 public class AdapterStations extends BaseAdapter {
 
     // global variables
@@ -76,6 +78,16 @@ public class AdapterStations extends BaseAdapter {
                 try {
                     JSONObject obj = jsonArray.getJSONObject(i);
 
+                    // coordinates conversation
+                    double[] coordinates = {
+                            obj.getJSONObject("geometry").getJSONArray("coordinates").getDouble(0),
+                            obj.getJSONObject("geometry").getJSONArray("coordinates").getDouble(1)
+                    };
+
+                    UTMRef utm = new UTMRef(coordinates[0], coordinates[1], 'N', 30);
+                    coordinates[0] = utm.toLatLng().getLat();
+                    coordinates[1] = utm.toLatLng().getLng();
+
                     stations.add(new Station(
                             new Properties(
                                     obj.getJSONObject("properties").getString("name"),
@@ -90,10 +102,7 @@ public class AdapterStations extends BaseAdapter {
                             ),
                             new Geometry(
                                     obj.getJSONObject("geometry").getString("type"),
-                                    new float[]{
-                                            (float) obj.getJSONObject("geometry").getJSONArray("coordinates").getDouble(0),
-                                            (float) obj.getJSONObject("geometry").getJSONArray("coordinates").getDouble(1)
-                                    }
+                                    coordinates
                             )
                     ));
                 } catch (JSONException e) {
