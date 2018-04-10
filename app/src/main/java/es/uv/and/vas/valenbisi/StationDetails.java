@@ -33,7 +33,7 @@ public class StationDetails extends AppCompatActivity {
             TextView tv_f = findViewById(R.id.textView_FreeValue);
             TextView tv_c = findViewById(R.id.textView_CoordinatesValue);
 
-            setTitle(st.properties.address);
+            setTitle(st.properties.name);
             tv_n.setText(String.valueOf(st.properties.number));
             tv_ad.setText(st.properties.address);
             tv_t.setText(String.valueOf(st.properties.total));

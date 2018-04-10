@@ -122,11 +122,11 @@ public class AdapterStations extends BaseAdapter {
     class ViewHolder{
         TextView vhaddress;
         TextView vhid;
-        TextView vhamount;
+        TextView vhreports;
         ViewHolder(View v){
-            vhaddress = v.findViewById(R.id.Station_address);
-            vhid = v.findViewById(R.id.Station_id);
-            vhamount = v.findViewById(R.id.Station_bicycles);
+            vhaddress = v.findViewById(R.id.textView_Row_Address);
+            vhid = v.findViewById(R.id.textView_Row_Id);
+            vhreports = v.findViewById(R.id.textView_Row_Reports);
         }
     }
 
@@ -146,7 +146,7 @@ public class AdapterStations extends BaseAdapter {
 
         holder.vhaddress.setText(stations.get(position).properties.address);
         holder.vhid.setText("#" + stations.get(position).properties.number);
-        holder.vhamount.setText(stations.get(position).properties.free + " bike(s) free");
+        holder.vhreports.setText("0 reports");
 
         return row;
     }

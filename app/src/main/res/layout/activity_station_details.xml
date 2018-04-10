@@ -22,7 +22,7 @@
         android:text="Number" />
 
     <TextView
-        android:id="@+id/textView_Address"
+        android:id="@+id/textView_Row_Address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView_Number"
@@ -35,7 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="false"
-        android:layout_below="@+id/textView_Address"
+        android:layout_below="@+id/textView_Row_Address"
         android:layout_marginStart="15dp"
         android:layout_marginTop="3dp"
         android:text="Total" />
@@ -155,18 +155,18 @@
         android:onClick="editDetails" />
 
     <ListView
-        android:id="@+id/ListView_Events"
+        android:id="@+id/ListView_Reports"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/button_showOnMap"
         android:layout_alignParentStart="false"
         android:layout_alignParentTop="false"
-        android:layout_below="@+id/textView_Events"
+        android:layout_below="@+id/textView_Row_Reports"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp" />
 
     <TextView
-        android:id="@+id/textView_Events"
+        android:id="@+id/textView_Row_Reports"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="false"
@@ -174,7 +174,7 @@
         android:layout_alignStart="@+id/textView_Details"
         android:layout_below="@+id/textView_Coordinates"
         android:layout_marginTop="5dp"
-        android:text="Events"
+        android:text="Reports"
         android:textColor="@android:color/black"
         android:textSize="24sp" />
 
