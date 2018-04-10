@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".StationReport">
+
+    <TextView
+        android:id="@+id/textView_ReportIssue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:text="Issue"
+        android:textColor="@android:color/black" />
+
+    <EditText
+        android:id="@+id/editText_ReportIssueValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView_ReportIssue"
+        android:layout_marginEnd="18dp"
+        android:layout_marginStart="18dp"
+        android:ems="10"
+        android:hint="Issue name"
+        android:inputType="textPersonName"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/textView_ReportDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/editText_ReportIssueValue"
+        android:layout_marginStart="15dp"
+        android:text="Description"
+        android:textColor="@android:color/black" />
+
+    <EditText
+        android:id="@+id/editText_ReportDescriptionValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/textView_ReportDescription"
+        android:layout_marginEnd="18dp"
+        android:layout_marginStart="18dp"
+        android:ems="10"
+        android:gravity="top|start"
+        android:hint="Issue description"
+        android:inputType="textMultiLine"
+        android:lines="8"
+        android:minLines="8"
+        android:scrollbars="vertical"
+        android:textAlignment="gravity"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/textView_ReportStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/editText_ReportDescriptionValue"
+        android:layout_marginStart="15dp"
+        android:text="Status"
+        android:textColor="@android:color/black" />
+
+    <Spinner
+        android:id="@+id/spinner_ReportStatusValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentStart="false"
+        android:layout_below="@id/textView_ReportStatus"
+        android:layout_marginEnd="18dp"
+        android:layout_marginStart="18dp" />
+
+    <TextView
+        android:id="@+id/textView_ReportType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="false"
+        android:layout_below="@id/spinner_ReportStatusValue"
+        android:layout_marginStart="15dp"
+        android:text="Type"
+        android:textColor="@android:color/black" />
+
+    <Spinner
+        android:id="@+id/spinner_ReportTypeValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentStart="false"
+        android:layout_below="@+id/textView_ReportType"
+        android:layout_marginEnd="18dp"
+        android:layout_marginStart="18dp" />
+
+    <Button
+        android:id="@+id/button_deleteReport"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginStart="20dp"
+        android:background="@drawable/delete_circle_button"
+        android:onClick="deleteReport"
+        android:paddingTop="10dp" />
+
+    <Button
+        android:id="@+id/button_saveReport"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/button_deleteReport"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/save_circle_button"
+        android:onClick="saveReport" />
+</RelativeLayout>

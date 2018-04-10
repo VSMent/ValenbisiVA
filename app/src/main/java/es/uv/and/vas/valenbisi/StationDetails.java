@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,7 +56,10 @@ public class StationDetails extends AppCompatActivity {
             startActivity(mapIntent);
         }
     }
-    public void editDetails(View view){
-        Toast.makeText(this, "Edit button click", Toast.LENGTH_SHORT).show();
+    public void addReport(View view){
+        Intent intent = new Intent("android.intent.action.StationReport");
+        intent.putExtra("pos", st.properties.number);
+        intent.putExtra("type", "add");
+        startActivity(intent);
     }
 }

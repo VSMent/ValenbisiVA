@@ -201,14 +201,14 @@
             app:layout_row="9" />
 
         <Button
-            android:id="@+id/button_editDetails"
+            android:id="@+id/button_addReport"
             android:layout_width="180dp"
             android:layout_height="52dp"
             android:layout_alignParentEnd="false"
             android:layout_marginEnd="5dp"
             android:layout_marginStart="5dp"
             android:drawableTop="@android:drawable/ic_menu_edit"
-            android:onClick="editDetails"
+            android:onClick="addReport"
             app:layout_column="2"
             app:layout_columnSpan="2"
             app:layout_row="9" />
