@@ -2,8 +2,8 @@ package es.uv.and.vas.valenbisi;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -24,7 +24,7 @@ public class StationReport extends AppCompatActivity {
 
         intent = getIntent();
         stationId = intent.getIntExtra("stationId", -1);
-        id = intent.getIntExtra("id",-1);
+        id = intent.getIntExtra("id", -1);
 
         et_rnv = findViewById(R.id.editText_ReportNameValue);
         et_rdv = findViewById(R.id.editText_ReportDescriptionValue);
@@ -112,9 +112,9 @@ public class StationReport extends AppCompatActivity {
         finish();
     }
 
-    private int getIndex(Spinner spinner, String myString){
-        for (int i=0;i<spinner.getCount();i++){
-            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)){
+    private int getIndex(Spinner spinner, String myString) {
+        for (int i = 0; i < spinner.getCount(); i++) {
+            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)) {
                 return i;
             }
         }

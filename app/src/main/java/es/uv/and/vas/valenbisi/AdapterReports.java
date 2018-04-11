@@ -5,101 +5,45 @@ import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 
-public class AdapterReports extends BaseAdapter {
+public class AdapterReports extends CursorAdapter {
 
-    // global variables
-    class ViewHolder {
-        TextView vhid;
-        TextView vhname;
-        ImageView vhimage;
-
-        ViewHolder(View v) {
-            vhid = v.findViewById(R.id.textView_ReportRow_Id);
-            vhname = v.findViewById(R.id.textView_ReportRow_Name);
-            vhimage = v.findViewById(R.id.imageView_ReportRow_Image);
-        }
-    }
-
-    ArrayList<String[]> reports;
-    Context context;
-    int stationId;
-
-    AdapterReports(Context c, int s) {
-        context = c;
-        stationId = s;
-        Init();
-    }
-
-    public void Init() {
-        reports = new ArrayList<>();
-
-        // get data from sql
-        DBHelper dbHelper = StationDetails.dbHelper;
-
-        Cursor cursor = dbHelper.FindReportByBikeStation(stationId);
-
-        if (cursor.moveToFirst()) {
-            int idIndex = cursor.getColumnIndex(DBHelper.KEY_ID);
-            int statusIndex = cursor.getColumnIndex(DBHelper.KEY_REPORT_STATUS);
-            int nameIndex = cursor.getColumnIndex(DBHelper.KEY_REPORT_NAME);
-
-            do {
-                reports.add(new String[]{cursor.getString(idIndex), cursor.getString(statusIndex), cursor.getString(nameIndex)});
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
+    AdapterReports(Context context, Cursor cursor, int flags) {
+        super(context, cursor, 0);
     }
 
     @Override
-    public int getCount() {
-        return reports.size();
+    public View newView(Context context, Cursor cursor, ViewGroup parent) {
+        return ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.report_list_row, parent, false);
     }
 
     @Override
-    public Object getItem(int position) {
-        return reports.get(position);
-    }
+    public void bindView(View view, Context context, Cursor cursor) {
+        int idIndex = cursor.getColumnIndex(DBHelper.KEY_ID);
+        int statusIndex = cursor.getColumnIndex(DBHelper.KEY_REPORT_STATUS);
+        int nameIndex = cursor.getColumnIndex(DBHelper.KEY_REPORT_NAME);
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
+        TextView id = view.findViewById(R.id.textView_ReportRow_Id);
+        ImageView image = view.findViewById(R.id.imageView_ReportRow_Image);
+        TextView name = view.findViewById(R.id.textView_ReportRow_Name);
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View row = convertView;
-        ViewHolder holder;
-
-        if (row == null) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            row = inflater.inflate(R.layout.report_list_row, parent, false);
-            holder = new ViewHolder(row);
-            row.setTag(holder);
-        } else {
-            holder = (ViewHolder) row.getTag();
-        }
-
-        holder.vhid.setText(reports.get(position)[0]);
-        switch (reports.get(position)[1]) {
+        id.setText(cursor.getString(idIndex));
+        switch (cursor.getString(statusIndex)) {
             case "Open":
-                holder.vhimage.setImageResource(R.drawable.circle_red);
+                image.setImageResource(R.drawable.circle_red);
                 break;
             case "Processing":
-                holder.vhimage.setImageResource(R.drawable.circle_yellow);
+                image.setImageResource(R.drawable.circle_yellow);
                 break;
             case "Closed":
-                holder.vhimage.setImageResource(R.drawable.circle_green);
+                image.setImageResource(R.drawable.circle_green);
                 break;
         }
-        holder.vhname.setText(reports.get(position)[2]);
-
-        return row;
+        name.setText(cursor.getString(nameIndex));
     }
 }
 
