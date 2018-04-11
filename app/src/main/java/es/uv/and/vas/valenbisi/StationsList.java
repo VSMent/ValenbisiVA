@@ -34,4 +34,7 @@ public class StationsList extends AppCompatActivity {
         super.onResume();
         stationsList.setAdapter(new AdapterStations(this));
     }
+
+
+
 }

@@ -9,28 +9,19 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-
-import uk.me.jstott.jcoord.UTMRef;
+import java.util.concurrent.ExecutionException;
 
 public class AdapterStations extends BaseAdapter {
 
     // global variables
+    HTTPConnector httpConnector;
     DBHelper dbHelper;
     SQLiteDatabase database;
+    public static ArrayList<Station> stations;
+    Context context;
     class ViewHolder{
         TextView vhaddress;
         TextView vhid;
@@ -54,10 +45,9 @@ public class AdapterStations extends BaseAdapter {
             return 0;
         }
     }
-    public static ArrayList<Station> stations;
-    Context context;
 
     AdapterStations(Context c){
+        httpConnector = new HTTPConnector();
         dbHelper = new DBHelper(c);
         database = dbHelper.getReadableDatabase();
         context = c;
@@ -66,80 +56,14 @@ public class AdapterStations extends BaseAdapter {
 
     public void Init(){
         // global variables for Init scope
-        String jsonString;
-        JSONArray jsonArray = null;
-        JSONObject jsonObject;
-
-        stations = new ArrayList<>();
-
-        // read file to writer -> jsonString
-        InputStream is = context.getResources().openRawResource(R.raw.valenbisi);
-        Writer writer = new StringWriter();
-        char[] buffer = new char[1024];
-
         try {
-            Reader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-            int n;
-            while ((n = reader.read(buffer)) != -1) {
-                writer.write(buffer, 0, n);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        jsonString = writer.toString();
+            stations =  httpConnector.execute().get();
 
-        // json array of features from jsonString
-        try{
-            jsonObject = new JSONObject(jsonString);
-            jsonArray = new JSONArray(jsonObject.get("features").toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        // clone data from jsonArray to stations array
-        if(jsonArray != null){
-            for (int i = 0; i < jsonArray.length(); i++) {
-                try {
-                    JSONObject obj = jsonArray.getJSONObject(i);
-
-                    // coordinates conversion
-                    double[] coordinates = {
-                            obj.getJSONObject("geometry").getJSONArray("coordinates").getDouble(0),
-                            obj.getJSONObject("geometry").getJSONArray("coordinates").getDouble(1)
-                    };
-
-                    UTMRef utm = new UTMRef(coordinates[0], coordinates[1], 'N', 30);
-                    coordinates[0] = utm.toLatLng().getLat();
-                    coordinates[1] = utm.toLatLng().getLng();
-
-                    stations.add(new Station(
-                            new Properties(
-                                    obj.getJSONObject("properties").getString("name"),
-                                    obj.getJSONObject("properties").getInt("number"),
-                                    obj.getJSONObject("properties").getString("address"),
-                                    obj.getJSONObject("properties").getString("open"),
-                                    obj.getJSONObject("properties").getInt("available"),
-                                    obj.getJSONObject("properties").getInt("free"),
-                                    obj.getJSONObject("properties").getInt("total"),
-                                    obj.getJSONObject("properties").getString("ticket"),
-                                    obj.getJSONObject("properties").getString("updated_at")
-                            ),
-                            new Geometry(
-                                    obj.getJSONObject("geometry").getString("type"),
-                                    coordinates
-                            )
-                    ));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
             Collections.sort(stations,new StationsComparator());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
     }
 
