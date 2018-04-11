@@ -1,6 +1,8 @@
 package es.uv.and.vas.valenbisi;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,14 +29,16 @@ import uk.me.jstott.jcoord.UTMRef;
 public class AdapterStations extends BaseAdapter {
 
     // global variables
+    DBHelper dbHelper;
+    SQLiteDatabase database;
     class ViewHolder{
         TextView vhaddress;
         TextView vhid;
         TextView vhreports;
         ViewHolder(View v){
-            vhaddress = v.findViewById(R.id.textView_Row_Address);
-            vhid = v.findViewById(R.id.textView_Row_Id);
-            vhreports = v.findViewById(R.id.textView_Row_Reports);
+            vhaddress = v.findViewById(R.id.textView_StationRow_Address);
+            vhid = v.findViewById(R.id.textView_StationRow_Id);
+            vhreports = v.findViewById(R.id.textView_StationRow_Reports);
         }
     }
     class StationsComparator implements Comparator<Station> {
@@ -54,6 +58,8 @@ public class AdapterStations extends BaseAdapter {
     Context context;
 
     AdapterStations(Context c){
+        dbHelper = new DBHelper(c);
+        database = dbHelper.getReadableDatabase();
         context = c;
         Init();
     }
@@ -168,7 +174,10 @@ public class AdapterStations extends BaseAdapter {
 
         holder.vhaddress.setText(stations.get(position).properties.address);
         holder.vhid.setText("#" + stations.get(position).properties.number);
-        holder.vhreports.setText("0 reports");
+
+        Cursor cursor = database.query(DBHelper.TABLE_NAME, null, DBHelper.KEY_STATION + "=" + stations.get(position).properties.number, null, null, null, null);
+        holder.vhreports.setText(cursor.getCount() + " reports");
+        cursor.close();
 
         return row;
     }

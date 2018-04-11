@@ -1,6 +1,6 @@
 package es.uv.and.vas.valenbisi;
 
-public class Properties {
+class Properties {
     public String name = "";
     public int number = 0;
     public String address = "";
