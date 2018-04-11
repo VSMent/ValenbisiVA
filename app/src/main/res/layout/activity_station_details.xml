@@ -179,12 +179,12 @@
         <ListView
             android:id="@+id/ListView_Reports"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="0dp"
             android:layout_alignParentStart="false"
             android:layout_alignParentTop="false"
             app:layout_column="0"
             app:layout_columnSpan="4"
-            app:layout_gravity="bottom"
+            app:layout_gravity="bottom|fill_vertical"
             app:layout_row="8" />
 
         <Button

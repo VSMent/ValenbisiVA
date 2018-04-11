@@ -9,10 +9,21 @@
     <string name="station_details_Free">Free</string>
     <string name="station_details_Coordinates">Coordinates</string>
     <string name="station_details_Reports">Reports</string>
-    <string name="station_report_Issue">Issue</string>
-    <string name="station_report_IssueHint">Issue name</string>
+    <string name="station_report_Name">Report</string>
+    <string name="station_report_NameHint">Report name</string>
     <string name="station_report_Description">Description</string>
-    <string name="station_report_DescriptionHint">Issue description</string>
+    <string name="station_report_DescriptionHint">Report description</string>
     <string name="station_report_Status">Status</string>
     <string name="station_report_Type">Type</string>
+    <string-array name="report_statuses">
+        <item>Open</item>
+        <item>Processing</item>
+        <item>Closed</item>
+    </string-array>
+    <string-array name="report_types">
+        <item>Electric</item>
+        <item>Masonry</item>
+        <item>Mechanical</item>
+        <item>Painting</item>
+    </string-array>
 </resources>

@@ -5,50 +5,65 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class StationDetails extends AppCompatActivity {
 
-    Intent intent;
+    Intent intentRoot;
     Station st;
+    static DBHelper dbHelper;
+    ListView lv_r;
+    int stationId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_station_details);
 
-        intent = getIntent();
-        int pos = intent.getIntExtra("pos",-1);
-        if(pos == -1){
-            Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
-        }else{
-            st = AdapterStations.stations.get(pos);
+        dbHelper = new DBHelper(this);
+        intentRoot = getIntent();
+        stationId = intentRoot.getIntExtra("stationId", -1);
+        st = AdapterStations.stations.get(stationId - 1);
 
-            TextView tv_n = findViewById(R.id.textView_NumberValue);
-            TextView tv_ad = findViewById(R.id.textView_AddressValue);
-            TextView tv_t = findViewById(R.id.textView_TotalValue);
-            TextView tv_av = findViewById(R.id.textView_AvailableValue);
-            TextView tv_f = findViewById(R.id.textView_FreeValue);
-            TextView tv_c = findViewById(R.id.textView_CoordinatesValue);
+        TextView tv_n = findViewById(R.id.textView_NumberValue);
+        TextView tv_ad = findViewById(R.id.textView_AddressValue);
+        TextView tv_t = findViewById(R.id.textView_TotalValue);
+        TextView tv_av = findViewById(R.id.textView_AvailableValue);
+        TextView tv_f = findViewById(R.id.textView_FreeValue);
+        TextView tv_c = findViewById(R.id.textView_CoordinatesValue);
+        lv_r = findViewById(R.id.ListView_Reports);
 
-            setTitle(st.properties.name);
-            tv_n.setText(String.valueOf(st.properties.number));
-            tv_ad.setText(st.properties.address);
-            tv_t.setText(String.valueOf(st.properties.total));
-            tv_av.setText(String.valueOf(st.properties.available));
-            tv_f.setText(String.valueOf(st.properties.free));
-            tv_c.setText(String.valueOf(st.geometry.coordinates[0]) + ", " + String.valueOf(st.geometry.coordinates[1]));
-        }
+        setTitle(st.properties.name);
+        tv_n.setText(String.valueOf(st.properties.number));
+        tv_ad.setText(st.properties.address);
+        tv_t.setText(String.valueOf(st.properties.total));
+        tv_av.setText(String.valueOf(st.properties.available));
+        tv_f.setText(String.valueOf(st.properties.free));
+        tv_c.setText(String.valueOf(st.geometry.coordinates[0]) + ", " + String.valueOf(st.geometry.coordinates[1]));
+
+        lv_r.setAdapter(new AdapterReports(this, stationId));
+
+        lv_r.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent("android.intent.action.StationReport");
+                intent.putExtra("stationId", st.properties.number);
+                intent.putExtra("reportName", ((TextView)view.findViewById(R.id.textView_ReportRow_Name)).getText().toString());
+                startActivityForResult(intent,1);
+            }
+        });
+
     }
 
-    public void showOnMap(View view){
+    public void showOnMap(View view) {
         double latitud = st.geometry.coordinates[0];
         double longitud = st.geometry.coordinates[1];
 
         String stationName = st.properties.name;
 
-        Uri gmmIntentUri = Uri.parse("geo:0,0?q="+latitud+","+longitud+"("+stationName+")");
+        Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + latitud + "," + longitud + "(" + stationName + ")");
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
         mapIntent.setPackage("com.google.android.apps.maps");
         // If is installed in the application, the Google Maps activity is launched
@@ -56,10 +71,25 @@ public class StationDetails extends AppCompatActivity {
             startActivity(mapIntent);
         }
     }
-    public void addReport(View view){
+
+    public void addReport(View view) {
         Intent intent = new Intent("android.intent.action.StationReport");
-        intent.putExtra("pos", st.properties.number);
-        intent.putExtra("type", "add");
-        startActivity(intent);
+        intent.putExtra("stationId", st.properties.number);
+        intent.putExtra("reportName", "");
+        startActivityForResult(intent,1);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK){
+            lv_r.setAdapter(new AdapterReports(this, stationId));
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }
