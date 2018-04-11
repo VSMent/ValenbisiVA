@@ -2,8 +2,8 @@ package es.uv.and.vas.valenbisi;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -43,15 +43,15 @@ public class StationDetails extends AppCompatActivity {
         tv_f.setText(String.valueOf(st.properties.free));
         tv_c.setText(String.valueOf(st.geometry.coordinates[0]) + ", " + String.valueOf(st.geometry.coordinates[1]));
 
-        lv_r.setAdapter(new AdapterReports(this, stationId));
+        lv_r.setAdapter(new AdapterReports(this, dbHelper.FindReportByBikeStation(stationId), 0));
 
-        lv_r.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        lv_r.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent("android.intent.action.StationReport");
                 intent.putExtra("stationId", st.properties.number);
-                intent.putExtra("reportName", ((TextView)view.findViewById(R.id.textView_ReportRow_Name)).getText().toString());
-                startActivityForResult(intent,1);
+                intent.putExtra("id", Integer.parseInt(((TextView) view.findViewById(R.id.textView_ReportRow_Id)).getText().toString()));
+                startActivityForResult(intent, 1);
             }
         });
 
@@ -75,15 +75,15 @@ public class StationDetails extends AppCompatActivity {
     public void addReport(View view) {
         Intent intent = new Intent("android.intent.action.StationReport");
         intent.putExtra("stationId", st.properties.number);
-        intent.putExtra("reportName", "");
-        startActivityForResult(intent,1);
+        intent.putExtra("id", -1);
+        startActivityForResult(intent, 1);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK){
-            lv_r.setAdapter(new AdapterReports(this, stationId));
+        if (resultCode == RESULT_OK) {
+            lv_r.setAdapter(new AdapterReports(this, dbHelper.FindReportByBikeStation(stationId), 0));
         }
     }
 

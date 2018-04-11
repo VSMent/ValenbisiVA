@@ -1,8 +1,8 @@
 package es.uv.and.vas.valenbisi;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -19,7 +19,7 @@ public class StationsList extends AppCompatActivity {
         stationsList = findViewById(R.id.ListView_Stations);
         stationsList.setAdapter(new AdapterStations(this));
 
-        stationsList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        stationsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent("android.intent.action.StationDetails");

@@ -2,109 +2,48 @@ package es.uv.and.vas.valenbisi;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 
-public class AdapterReports extends BaseAdapter {
+public class AdapterReports extends CursorAdapter {
 
-    // global variables
-    class ViewHolder {
-        TextView vhname;
-        ImageView vhimage;
-
-        ViewHolder(View v) {
-            vhname = v.findViewById(R.id.textView_ReportRow_Name);
-            vhimage = v.findViewById(R.id.imageView_ReportRow_Image);
-        }
-    }
-
-    private ArrayList<String[]> reports;
-    Context context;
-    int stationId;
-
-    AdapterReports(Context c, int s) {
-        context = c;
-        stationId = s;
-        Init();
-    }
-
-    public void Init() {
-        reports = new ArrayList<>();
-
-        // get data from sql
-        DBHelper dbHelper;
-        SQLiteDatabase database;
-
-        dbHelper = StationDetails.dbHelper;
-        database = dbHelper.getReadableDatabase();
-
-        Cursor cursor = database.query(DBHelper.TABLE_NAME,
-                new String[]{DBHelper.KEY_REPORT_STATUS, DBHelper.KEY_REPORT_NAME},
-                DBHelper.KEY_STATION + "=" + stationId,
-                null, null, null, null);
-
-        if (cursor.moveToFirst()) {
-            int statusIndex = cursor.getColumnIndex(DBHelper.KEY_REPORT_STATUS);
-            int nameIndex = cursor.getColumnIndex(DBHelper.KEY_REPORT_NAME);
-
-            do {
-                reports.add(new String[]{cursor.getString(statusIndex), cursor.getString(nameIndex)});
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        dbHelper.close();
+    AdapterReports(Context context, Cursor cursor, int flags) {
+        super(context, cursor, 0);
     }
 
     @Override
-    public int getCount() {
-        return reports.size();
+    public View newView(Context context, Cursor cursor, ViewGroup parent) {
+        return ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.report_list_row, parent, false);
     }
 
     @Override
-    public Object getItem(int position) {
-        return reports.get(position);
-    }
+    public void bindView(View view, Context context, Cursor cursor) {
+        int idIndex = cursor.getColumnIndex(DBHelper.KEY_ID);
+        int statusIndex = cursor.getColumnIndex(DBHelper.KEY_REPORT_STATUS);
+        int nameIndex = cursor.getColumnIndex(DBHelper.KEY_REPORT_NAME);
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
+        TextView id = view.findViewById(R.id.textView_ReportRow_Id);
+        ImageView image = view.findViewById(R.id.imageView_ReportRow_Image);
+        TextView name = view.findViewById(R.id.textView_ReportRow_Name);
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View row = convertView;
-        ViewHolder holder = null;
-
-        if (row == null) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            row = inflater.inflate(R.layout.report_list_row, parent, false);
-            holder = new ViewHolder(row);
-            row.setTag(holder);
-        } else {
-            holder = (ViewHolder) row.getTag();
-        }
-
-        switch (reports.get(position)[0]) {
+        id.setText(cursor.getString(idIndex));
+        switch (cursor.getString(statusIndex)) {
             case "Open":
-                holder.vhimage.setImageResource(R.drawable.circle_red);
+                image.setImageResource(R.drawable.circle_red);
                 break;
             case "Processing":
-                holder.vhimage.setImageResource(R.drawable.circle_yellow);
+                image.setImageResource(R.drawable.circle_yellow);
                 break;
             case "Closed":
-                holder.vhimage.setImageResource(R.drawable.circle_green);
+                image.setImageResource(R.drawable.circle_green);
                 break;
         }
-        holder.vhname.setText(reports.get(position)[1]);
-
-        return row;
+        name.setText(cursor.getString(nameIndex));
     }
 }
 

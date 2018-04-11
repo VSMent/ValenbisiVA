@@ -1,15 +1,15 @@
 package es.uv.and.vas.valenbisi;
 
 class Properties {
-    public String name = "";
-    public int number = 0;
-    public String address = "";
-    public String open = "";
-    public int available = 0;
-    public int free = 0;
-    public int total = 0;
-    public String ticket = "";
-    public String updated_at = null; // 08/04/2018 00:06:15;
+    public String name;
+    public int number;
+    public String address;
+    public String open;
+    public int available;
+    public int free;
+    public int total;
+    public String ticket;
+    public String updated_at; // 08/04/2018 00:06:15;
 
     Properties(String name, int number, String address, String open, int available, int free, int total, String ticket, String updated_at){
         this.name = name;
