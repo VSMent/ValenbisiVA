@@ -1,8 +1,6 @@
 package es.uv.and.vas.valenbisi;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +15,10 @@ import java.util.concurrent.ExecutionException;
 public class AdapterStations extends BaseAdapter {
 
     // global variables
-    HTTPConnector httpConnector;
-    DBHelper dbHelper;
-    SQLiteDatabase database;
+    private HTTPConnector httpConnector;
+    private DBHelper dbHelper;
     public static ArrayList<Station> stations;
-    Context context;
+    private Context context;
     class ViewHolder{
         TextView vhaddress;
         TextView vhid;
@@ -49,12 +46,11 @@ public class AdapterStations extends BaseAdapter {
     AdapterStations(Context c){
         httpConnector = new HTTPConnector();
         dbHelper = new DBHelper(c);
-        database = dbHelper.getReadableDatabase();
         context = c;
         Init();
     }
 
-    public void Init(){
+    private void Init(){
         // global variables for Init scope
         try {
             stations =  httpConnector.execute().get();
@@ -98,10 +94,7 @@ public class AdapterStations extends BaseAdapter {
 
         holder.vhaddress.setText(stations.get(position).properties.address);
         holder.vhid.setText("#" + stations.get(position).properties.number);
-
-        Cursor cursor = database.query(DBHelper.TABLE_NAME, null, DBHelper.KEY_STATION + "=" + stations.get(position).properties.number, null, null, null, null);
-        holder.vhreports.setText(cursor.getCount() + " reports");
-        cursor.close();
+        holder.vhreports.setText(dbHelper.ReportsAmountForStation(stations.get(position).properties.number) + " reports");
 
         return row;
     }

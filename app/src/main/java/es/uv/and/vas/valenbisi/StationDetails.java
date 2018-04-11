@@ -50,7 +50,7 @@ public class StationDetails extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent("android.intent.action.StationReport");
                 intent.putExtra("stationId", st.properties.number);
-                intent.putExtra("reportName", ((TextView)view.findViewById(R.id.textView_ReportRow_Name)).getText().toString());
+                intent.putExtra("id", Integer.parseInt(((TextView)view.findViewById(R.id.textView_ReportRow_Id)).getText().toString()));
                 startActivityForResult(intent,1);
             }
         });
@@ -75,7 +75,7 @@ public class StationDetails extends AppCompatActivity {
     public void addReport(View view) {
         Intent intent = new Intent("android.intent.action.StationReport");
         intent.putExtra("stationId", st.properties.number);
-        intent.putExtra("reportName", "");
+        intent.putExtra("id", -1);
         startActivityForResult(intent,1);
     }
 

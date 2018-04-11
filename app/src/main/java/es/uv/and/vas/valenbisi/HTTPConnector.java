@@ -20,8 +20,8 @@ import uk.me.jstott.jcoord.UTMRef;
 public class HTTPConnector extends AsyncTask<String, Void, ArrayList> {
 
     @Override
-    protected ArrayList doInBackground(String... params) {
-        ArrayList stations = new ArrayList<Station>();
+    protected ArrayList<Station> doInBackground(String... params) {
+        ArrayList<Station> stations = new ArrayList<>();
         String jsonString;
         JSONArray jsonArray = null;
         JSONObject jsonObject;

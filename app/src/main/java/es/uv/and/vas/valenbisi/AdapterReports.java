@@ -2,7 +2,6 @@ package es.uv.and.vas.valenbisi;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,16 +15,18 @@ public class AdapterReports extends BaseAdapter {
 
     // global variables
     class ViewHolder {
+        TextView vhid;
         TextView vhname;
         ImageView vhimage;
 
         ViewHolder(View v) {
+            vhid = v.findViewById(R.id.textView_ReportRow_Id);
             vhname = v.findViewById(R.id.textView_ReportRow_Name);
             vhimage = v.findViewById(R.id.imageView_ReportRow_Image);
         }
     }
 
-    private ArrayList<String[]> reports;
+    ArrayList<String[]> reports;
     Context context;
     int stationId;
 
@@ -39,27 +40,20 @@ public class AdapterReports extends BaseAdapter {
         reports = new ArrayList<>();
 
         // get data from sql
-        DBHelper dbHelper;
-        SQLiteDatabase database;
+        DBHelper dbHelper = StationDetails.dbHelper;
 
-        dbHelper = StationDetails.dbHelper;
-        database = dbHelper.getReadableDatabase();
-
-        Cursor cursor = database.query(DBHelper.TABLE_NAME,
-                new String[]{DBHelper.KEY_REPORT_STATUS, DBHelper.KEY_REPORT_NAME},
-                DBHelper.KEY_STATION + "=" + stationId,
-                null, null, null, null);
+        Cursor cursor = dbHelper.FindReportByBikeStation(stationId);
 
         if (cursor.moveToFirst()) {
+            int idIndex = cursor.getColumnIndex(DBHelper.KEY_ID);
             int statusIndex = cursor.getColumnIndex(DBHelper.KEY_REPORT_STATUS);
             int nameIndex = cursor.getColumnIndex(DBHelper.KEY_REPORT_NAME);
 
             do {
-                reports.add(new String[]{cursor.getString(statusIndex), cursor.getString(nameIndex)});
+                reports.add(new String[]{cursor.getString(idIndex), cursor.getString(statusIndex), cursor.getString(nameIndex)});
             } while (cursor.moveToNext());
         }
         cursor.close();
-        dbHelper.close();
     }
 
     @Override
@@ -80,7 +74,7 @@ public class AdapterReports extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
-        ViewHolder holder = null;
+        ViewHolder holder;
 
         if (row == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -91,7 +85,8 @@ public class AdapterReports extends BaseAdapter {
             holder = (ViewHolder) row.getTag();
         }
 
-        switch (reports.get(position)[0]) {
+        holder.vhid.setText(reports.get(position)[0]);
+        switch (reports.get(position)[1]) {
             case "Open":
                 holder.vhimage.setImageResource(R.drawable.circle_red);
                 break;
@@ -102,7 +97,7 @@ public class AdapterReports extends BaseAdapter {
                 holder.vhimage.setImageResource(R.drawable.circle_green);
                 break;
         }
-        holder.vhname.setText(reports.get(position)[1]);
+        holder.vhname.setText(reports.get(position)[2]);
 
         return row;
     }
